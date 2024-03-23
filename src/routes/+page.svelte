@@ -1,11 +1,13 @@
 <script lang="ts">
-	import { Delete, SquareSigma } from 'lucide-svelte';
+	import Modal from '$lib/components/Modal.svelte';
+import { Delete, History, SquareSigma } from 'lucide-svelte';
 	import { evaluate } from 'mathjs';
 	import { onMount } from 'svelte';
 
 	let formula: string = '';
 	let result: string = '';
 	let invalid: boolean = false;
+	let isModalOpen: boolean = false;
 
 	$: result = calculate(formula);
 
@@ -23,9 +25,7 @@
 	function sendResult() {
 		if (result === 'invalid!') return;
 
-		formula = result.toString();
-
-		let history = result;
+		let history = formula;
 
 		fetch('http://127.0.0.1:8000/api/history', {
 			method: 'POST',
@@ -34,17 +34,36 @@
 			},
 			body: new URLSearchParams({ history }).toString()
 		});
+
+		formula = result.toString();
 	}
+
+	function useHistory(item: any) {
+        formula = item.detail.history;
+
+		console.log(item.detail.history);
+        isModalOpen = false;
+    }
 
 	onMount(() => {
 		document.onkeydown = function (e) {
 			return false;
 		};
+
+		document.addEventListener('click', function (event) {
+            if (event.target && !(event.target as Element).closest('.card')) {
+                isModalOpen = false;
+            }
+        });
 	});
 </script>
 
 <div class="container mx-auto flex flex-col justify-center items-center p-4 max-w-lg">
-	<div class="card w-full min-h-40 my-5 flex items-center overflow-scroll">
+	<div class="card w-full min-h-40 my-5 flex items-center overflow-scroll relative">
+		<button class="btn-icon btn-icon-sm shadow-md variant-filled-primary absolute top-2 right-2"
+		on:click={() => isModalOpen = !isModalOpen}
+			><History size={20} /></button
+		>
 		{#if invalid}
 			<p class="text-4xl font-bold mx-auto text-red-600">{result}</p>
 		{:else}
@@ -56,8 +75,7 @@
 		<div class="overflow-scroll">
 			<p>{formula}</p>
 		</div>
-		<button class="variant-filled-surface" on:click={sendResult}
-			><span class="px-2">=</span></button
+		<button class="variant-filled-surface" on:click={sendResult}><span class="px-2">=</span></button
 		>
 	</div>
 	<div class="p-4">
@@ -106,4 +124,9 @@
 			{/each}
 		</div>
 	</div>
+</div>
+<div>
+	{#if isModalOpen}
+		<Modal on:select={useHistory}/>
+	{/if}
 </div>

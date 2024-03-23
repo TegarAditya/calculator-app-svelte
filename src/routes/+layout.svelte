@@ -19,11 +19,12 @@
 	// Floating UI for Popups
 	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
 	import { storePopup } from '@skeletonlabs/skeleton';
-	import { History } from 'lucide-svelte';
+	import { Github } from 'lucide-svelte';
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
 	import { initializeStores } from '@skeletonlabs/skeleton';
 	initializeStores();
+
 </script>
 
 <Drawer />
@@ -31,7 +32,7 @@
 	<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
 		<svelte:fragment slot="lead"><LightSwitch /></svelte:fragment>
 		<h1 class="text-xl">Calculator</h1>
-		<svelte:fragment slot="trail"><History /></svelte:fragment>
+		<svelte:fragment slot="trail"><Github /></svelte:fragment>
 	</AppBar>
 	<slot />
 </div>
