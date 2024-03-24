@@ -1,9 +1,17 @@
 <script lang="ts">
 	import Modal from '$lib/components/Modal.svelte';
-import { Delete, History, SquareSigma } from 'lucide-svelte';
+	import { Delete, History, SquareSigma } from 'lucide-svelte';
 	import { evaluate } from 'mathjs';
 	import { onMount } from 'svelte';
 
+	/**
+	 * Represents the state variables used in the page component.
+	 * 
+	 * @prop {string} formula - The current formula entered by the user.
+	 * @prop {string} result - The result of the calculation.
+	 * @prop {boolean} invalid - Indicates if the formula is invalid.
+	 * @prop {boolean} isModalOpen - Indicates if the modal is open.
+	 */
 	let formula: string = '';
 	let result: string = '';
 	let invalid: boolean = false;
@@ -11,7 +19,13 @@ import { Delete, History, SquareSigma } from 'lucide-svelte';
 
 	$: result = calculate(formula);
 
-	function calculate(string: string) {
+	/**
+	 * Calculates the result of a mathematical expression.
+	 * 
+	 * @param {string} string - The mathematical expression to evaluate.
+	 * @returns {string} - The result of the evaluation.
+	 */
+	function calculate(string: string): string {
 		try {
 			invalid = false;
 			if (string === '') return '0';
@@ -22,10 +36,18 @@ import { Delete, History, SquareSigma } from 'lucide-svelte';
 		}
 	}
 
+	/**
+	 * Sends the result to the server and updates the formula.
+	 * If the result is 'invalid!', the function returns early.
+	 * The formula is stored in the 'history' variable and sent as a POST request to the server.
+	 * The 'Content-Type' header is set to 'application/x-www-form-urlencoded'.
+	 * The formula is converted to a URL-encoded string using the URLSearchParams API.
+	 * The updated formula is then assigned to the 'formula' variable.
+	 */
 	function sendResult() {
 		if (result === 'invalid!') return;
 
-		let history = formula;
+		let history = result;
 
 		fetch('http://127.0.0.1:8000/api/history', {
 			method: 'POST',
@@ -38,12 +60,17 @@ import { Delete, History, SquareSigma } from 'lucide-svelte';
 		formula = result.toString();
 	}
 
+	/**
+	 * Handles the history of the calculator app.
+	 * 
+	 * @param {any} item - The item containing the history details.
+	 */
 	function useHistory(item: any) {
-        formula = item.detail.history;
+		formula = item.detail.history;
 
 		console.log(item.detail.history);
-        isModalOpen = false;
-    }
+		isModalOpen = false;
+	}
 
 	onMount(() => {
 		document.onkeydown = function (e) {
@@ -51,18 +78,18 @@ import { Delete, History, SquareSigma } from 'lucide-svelte';
 		};
 
 		document.addEventListener('click', function (event) {
-            if (event.target && !(event.target as Element).closest('.card')) {
-                isModalOpen = false;
-            }
-        });
+			if (event.target && !(event.target as Element).closest('.card')) {
+				isModalOpen = false;
+			}
+		});
 	});
 </script>
 
 <div class="container mx-auto flex flex-col justify-center items-center p-4 max-w-lg">
 	<div class="card w-full min-h-40 my-5 flex items-center overflow-scroll relative">
-		<button class="btn-icon btn-icon-sm shadow-md variant-filled-primary absolute top-2 right-2"
-		on:click={() => isModalOpen = !isModalOpen}
-			><History size={20} /></button
+		<button
+			class="btn-icon btn-icon-sm shadow-md variant-filled-primary absolute top-2 right-2"
+			on:click={() => (isModalOpen = !isModalOpen)}><History size={20} /></button
 		>
 		{#if invalid}
 			<p class="text-4xl font-bold mx-auto text-red-600">{result}</p>
@@ -127,6 +154,6 @@ import { Delete, History, SquareSigma } from 'lucide-svelte';
 </div>
 <div>
 	{#if isModalOpen}
-		<Modal on:select={useHistory}/>
+		<Modal on:select={useHistory} />
 	{/if}
 </div>
