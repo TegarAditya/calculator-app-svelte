@@ -32,7 +32,7 @@
 		 * @param {string} endpoint - The URL of the API endpoint to fetch data from.
 		 * @returns {Promise} - A promise that resolves with the fetched data.
 		 */
-		fetch('http://127.0.0.1:8000/api/history')
+		fetch('https://calculator-api.tegar.dev/api/history')
 			.then((response) => response.json())
 			.then((data) => {
 				history = data.data;
