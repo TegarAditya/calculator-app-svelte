@@ -6,7 +6,7 @@
 
 	/**
 	 * Represents the state variables used in the page component.
-	 * 
+	 *
 	 * @prop {string} formula - The current formula entered by the user.
 	 * @prop {string} result - The result of the calculation.
 	 * @prop {boolean} invalid - Indicates if the formula is invalid.
@@ -21,7 +21,7 @@
 
 	/**
 	 * Calculates the result of a mathematical expression.
-	 * 
+	 *
 	 * @param {string} string - The mathematical expression to evaluate.
 	 * @returns {string} - The result of the evaluation.
 	 */
@@ -62,7 +62,7 @@
 
 	/**
 	 * Handles the history of the calculator app.
-	 * 
+	 *
 	 * @param {any} item - The item containing the history details.
 	 */
 	function useHistory(item: any) {
@@ -86,7 +86,7 @@
 </script>
 
 <div class="container mx-auto flex flex-col justify-center items-center p-4 max-w-lg">
-	<div class="card w-full min-h-40 my-5 flex items-center overflow-scroll relative">
+	<div class="card w-full min-h-40 my-5 flex items-center overflow-auto relative">
 		<button
 			class="btn-icon btn-icon-sm shadow-md variant-filled-primary absolute top-2 right-2"
 			on:click={() => (isModalOpen = !isModalOpen)}><History size={20} /></button
@@ -99,11 +99,10 @@
 	</div>
 	<div class="input-group input-group-divider h-12 grid-cols-[auto_1fr_auto]">
 		<div class="input-group-shim"><SquareSigma /></div>
-		<div class="overflow-scroll">
-			<p>{formula}</p>
+		<div class="overflow-x-scroll flex-1">
+			<p class="whitespace-nowrap">{formula}</p>
 		</div>
-		<button class="variant-filled-surface" on:click={sendResult}><span class="px-2">=</span></button
-		>
+		<button class="variant-filled-surface flex-shrink-0" on:click={sendResult}><span class="px-2">=</span></button>
 	</div>
 	<div class="p-4">
 		<div class="grid grid-cols-4 gap-2">
@@ -143,7 +142,7 @@
 					{#if key === '/'}
 						÷
 					{:else if key === '*'}
-						×
+						&times;
 					{:else}
 						{key}
 					{/if}
