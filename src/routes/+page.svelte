@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Modal from '$lib/components/Modal.svelte';
+	import HistoryStorage from '$lib/stores/history';
 	import { Delete, History, SquareSigma } from 'lucide-svelte';
 	import { evaluate } from 'mathjs';
 	import { onMount } from 'svelte';
@@ -37,22 +38,15 @@
 	}
 
 	/**
-	 * Saves the current calculation result to localStorage as part of the calculation history.
-	 * - Checks if the current input is valid before proceeding.
-	 * - Converts the current formula to a string and appends it to the 'history' array in localStorage.
-	 * - Updates the formula with the latest result after saving.
+	 * -Saves the current calculation to history if valid.
+	 * Updates the formula with the latest result.
 	 */
-	function saveResult() {
-		if (invalid) return;
+	async function saveResult() {
+		if (invalid || formula.trim() === '') return;
 
-		let history = formula.toString();
+		await HistoryStorage.insert(formula);
 
-		// Save to localStorage
-		let histories = JSON.parse(localStorage.getItem('history') || '[]');
-		histories.push(history);
-		localStorage.setItem('history', JSON.stringify(histories));
-
-		formula = result.toString();
+		formula = result?.toString() ?? '';
 	}
 
 	/**
