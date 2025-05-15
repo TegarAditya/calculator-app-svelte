@@ -37,25 +37,20 @@
 	}
 
 	/**
-	 * Sends the result to the server and updates the formula.
-	 * If the result is 'invalid!', the function returns early.
-	 * The formula is stored in the 'history' variable and sent as a POST request to the server.
-	 * The 'Content-Type' header is set to 'application/x-www-form-urlencoded'.
-	 * The formula is converted to a URL-encoded string using the URLSearchParams API.
-	 * The updated formula is then assigned to the 'formula' variable.
+	 * Saves the current calculation result to localStorage as part of the calculation history.
+	 * - Checks if the current input is valid before proceeding.
+	 * - Converts the current formula to a string and appends it to the 'history' array in localStorage.
+	 * - Updates the formula with the latest result after saving.
 	 */
-	function sendResult() {
-		if (result === 'invalid!') return;
+	function saveResult() {
+		if (invalid) return;
 
-		let history = result;
+		let history = formula.toString();
 
-		fetch('https://calculator-api.tegar.dev/api/history', {
-			method: 'POST',
-			headers: {
-				'Content-Type': 'application/x-www-form-urlencoded'
-			},
-			body: new URLSearchParams({ history }).toString()
-		});
+		// Save to localStorage
+		let histories = JSON.parse(localStorage.getItem('history') || '[]');
+		histories.push(history);
+		localStorage.setItem('history', JSON.stringify(histories));
 
 		formula = result.toString();
 	}
@@ -65,10 +60,9 @@
 	 *
 	 * @param {any} item - The item containing the history details.
 	 */
-	function useHistory(item: any) {
-		formula = item.detail.history;
+	function useHistory(item: CustomEvent) {
+		formula = item.detail;
 
-		console.log(item.detail.history);
 		isModalOpen = false;
 	}
 
@@ -102,7 +96,9 @@
 		<div class="overflow-x-scroll flex-1">
 			<p class="whitespace-nowrap">{formula}</p>
 		</div>
-		<button class="variant-filled-surface flex-shrink-0" on:click={sendResult}><span class="px-2">=</span></button>
+		<button class="variant-filled-surface flex-shrink-0" on:click={saveResult}
+			><span class="px-2">=</span></button
+		>
 	</div>
 	<div class="p-4">
 		<div class="grid grid-cols-4 gap-2">
