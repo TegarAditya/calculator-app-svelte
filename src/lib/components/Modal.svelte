@@ -5,44 +5,54 @@
 
 	const dispatch = createEventDispatcher();
 
-	/**
-	 * Represents the type of history in the modal component.
-	 * @typedef {Object} history
-	 * @property {string} history - The history string.
-	 */
-	type history = {
-		history: string;
-	};
-
-	let history: history[] = [];
+	let history: string[] = [];
 
 	/**
 	 * Selects a history item.
 	 *
-	 * @param {any} item - The history item to select.
+	 * @param {string} item - The history item to select.
 	 */
-	function selectHistoryItem(item: any) {
+	function selectHistoryItem(item: string) {
 		dispatch('select', item);
+	}
+
+	/**
+	 * Remove the history.
+	 */
+	function removeHistoryItem(item: string) {
+		history = history.filter(h => h !== item);
+		localStorage.setItem('history', JSON.stringify(history));
+	}
+
+	/**
+	 * Clears the history.
+	 */
+	function clearHistory() {
+		history = [];
+		localStorage.setItem('history', JSON.stringify(history));
 	}
 
 	onMount(() => {
 		/**
-		 * Fetches data from the specified API endpoint and updates the 'history' variable with the response data.
-		 *
-		 * @param {string} endpoint - The URL of the API endpoint to fetch data from.
-		 * @returns {Promise} - A promise that resolves with the fetched data.
+		 * Loads history data from localStorage and updates the 'history' variable.
 		 */
-		fetch('https://calculator-api.tegar.dev/api/history')
-			.then((response) => response.json())
-			.then((data) => {
-				history = data.data;
-			});
+		const stored = localStorage.getItem('history');
+		console.log(stored);
+		if (stored) {
+			try {
+				history = JSON.parse(stored);
+			} catch (e) {
+				history = [];
+			}
+		} else {
+			history = [];
+		}
 	});
 </script>
 
 <div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center">
 	<div
-		class="card h-[60vh] w-full items-center m-5 my-auto overflow-scroll"
+		class="card relative h-[60vh] w-full items-center m-5 my-auto overflow-scroll"
 		transition:fade={{ duration: 300 }}
 	>
 		<h1 class="sticky top-0 variant-filled-primary z-10 text-xl font-bold w-full text-center py-2">
@@ -55,10 +65,21 @@
 					on:click={() => selectHistoryItem(item)}
 				>
 					<p class="text-xl font-semibold my-auto flex-none text-right">
-						{item.history} = <span>{evaluate(item.history)}</span>
+						{item} = <span>{evaluate(item)}</span>
 					</p>
 				</button>
 			{/each}
+		</div>
+		<div class="absolute bottom-0 z-10 text-xl font-bold w-full text-center py-2 px-2">
+			<button
+				class="btn variant-filled-surface w-full"
+				on:click={() => {
+					history = [];
+					localStorage.setItem('history', JSON.stringify(history));
+				}}
+			>
+				Clear History
+			</button>
 		</div>
 	</div>
 </div>
