@@ -96,7 +96,7 @@
 		<div class="overflow-x-scroll flex-1">
 			<p class="whitespace-nowrap">{formula}</p>
 		</div>
-		<button class="variant-filled-surface flex-shrink-0" onclick={saveResult}
+		<button class="variant-filled-surface shrink-0" onclick={saveResult}
 			><span class="px-2">=</span></button
 		>
 	</div>

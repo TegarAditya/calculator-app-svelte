@@ -1,5 +1,5 @@
 <script lang="ts">
-	import '../app.postcss';
+	import '../app.css';
 
 	// Highlight JS
 	import hljs from 'highlight.js/lib/core';
@@ -33,7 +33,7 @@
 </script>
 
 <Drawer />
-<div class="h-[100dvh] w-full">
+<div class="h-dvh w-full">
 	<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
 		{#snippet lead()}
 				<LightSwitch />
