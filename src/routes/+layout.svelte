@@ -1,38 +1,28 @@
 <script lang="ts">
-	import '../app.postcss';
+	import '../app.css';
 
-	// Highlight JS
-	import hljs from 'highlight.js/lib/core';
 	import 'highlight.js/styles/github-dark.css';
-	import { AppBar, Drawer, LightSwitch, storeHighlightJs } from '@skeletonlabs/skeleton';
-	import xml from 'highlight.js/lib/languages/xml'; // for HTML
-	import css from 'highlight.js/lib/languages/css';
-	import javascript from 'highlight.js/lib/languages/javascript';
-	import typescript from 'highlight.js/lib/languages/typescript';
+	import { AppBar } from '@skeletonlabs/skeleton-svelte';
 
-	hljs.registerLanguage('xml', xml); // for HTML
-	hljs.registerLanguage('css', css);
-	hljs.registerLanguage('javascript', javascript);
-	hljs.registerLanguage('typescript', typescript);
-	storeHighlightJs.set(hljs);
+	import LightSwitch from '$lib/components/LightSwitch.svelte';
+	import { Github } from '@lucide/svelte';
 
-	// Floating UI for Popups
-	import { computePosition, autoUpdate, flip, shift, offset, arrow } from '@floating-ui/dom';
-	import { storePopup } from '@skeletonlabs/skeleton';
-	import { Github } from 'lucide-svelte';
-	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
 
-	import { initializeStores } from '@skeletonlabs/skeleton';
-	initializeStores();
-
+	let { children }: Props = $props();
 </script>
 
-<Drawer />
-<div class="h-[100dvh] w-full">
-	<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
-		<svelte:fragment slot="lead"><LightSwitch /></svelte:fragment>
-		<h1 class="text-xl">Calculator</h1>
-		<svelte:fragment slot="trail"><Github /></svelte:fragment>
+<div class="h-dvh w-full">
+	<AppBar>
+		{#snippet lead()}
+			<LightSwitch />
+		{/snippet}
+		<h1 class="text-xl font-bold">Calculator</h1>
+		{#snippet trail()}
+			<Github class="my-auto"/>
+		{/snippet}
 	</AppBar>
-	<slot />
+	{@render children?.()}
 </div>

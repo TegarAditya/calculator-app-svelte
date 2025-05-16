@@ -1,0 +1,24 @@
+@import 'tailwindcss';
+
+@import '@skeletonlabs/skeleton';
+@import '@skeletonlabs/skeleton/optional/presets';
+@import '@skeletonlabs/skeleton/themes/modern';
+
+@source "../node_modules/@skeletonlabs/skeleton-svelte/dist";
+
+/* modern theme */
+@font-face {
+	font-family: 'Quicksand';
+	src: url('/fonts/Quicksand.ttf');
+	font-display: swap;
+}
+
+[data-theme='modern'] {
+	--radius-base: 9999rem;
+	--radius-container: 1.5rem;
+	--heading-font-weight: bolder;
+	--default-ring-width: 3px;
+	--default-divide-width: 3px;
+}
+
+@custom-variant dark (&:where([data-mode="dark"], [data-mode="dark"] *));
