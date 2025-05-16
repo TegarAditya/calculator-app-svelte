@@ -35,7 +35,7 @@
 
 	onMount(async () => {
 		/**
-		 * Loads history data from localStorage and updates the 'history' variable.
+		 * Loads history data from localForage and updates the 'history' state.
 		 */
 		const stored = await HistoryStorage.fetch();
 		history = stored ?? [];
