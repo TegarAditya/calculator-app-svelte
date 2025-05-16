@@ -23,6 +23,11 @@
 	storePopup.set({ computePosition, autoUpdate, flip, shift, offset, arrow });
 
 	import { initializeStores } from '@skeletonlabs/skeleton';
+	interface Props {
+		children?: import('svelte').Snippet;
+	}
+
+	let { children }: Props = $props();
 	initializeStores();
 
 </script>
@@ -30,9 +35,13 @@
 <Drawer />
 <div class="h-[100dvh] w-full">
 	<AppBar gridColumns="grid-cols-3" slotDefault="place-self-center" slotTrail="place-content-end">
-		<svelte:fragment slot="lead"><LightSwitch /></svelte:fragment>
+		{#snippet lead()}
+				<LightSwitch />
+			{/snippet}
 		<h1 class="text-xl">Calculator</h1>
-		<svelte:fragment slot="trail"><Github /></svelte:fragment>
+		{#snippet trail()}
+				<Github />
+			{/snippet}
 	</AppBar>
-	<slot />
+	{@render children?.()}
 </div>
