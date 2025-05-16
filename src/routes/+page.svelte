@@ -1,7 +1,7 @@
 <script lang="ts">
 	import Modal from '$lib/components/Modal.svelte';
 	import HistoryStorage from '$lib/stores/history';
-	import { Delete, History, SquareSigma } from 'lucide-svelte';
+	import { Delete, History, SquareSigma } from '@lucide/svelte';
 	import { evaluate } from 'mathjs';
 	import { onMount } from 'svelte';
 
@@ -80,25 +80,27 @@
 </script>
 
 <div class="container mx-auto flex flex-col justify-center items-center p-4 max-w-lg">
-	<div class="card w-full min-h-40 my-5 preset-filled-surface-100-900 flex items-center overflow-auto relative">
+	<div
+		class="card w-full min-h-40 my-5 preset-filled-surface-100-900 flex items-center overflow-auto relative"
+	>
 		<button
 			type="button"
 			class="btn-icon rounded-full shadow-md preset-filled-primary-500 text-white absolute p-2 top-2 right-2"
-			onclick={() => (isModalOpen = !isModalOpen)}><History /></button
+			onclick={() => (isModalOpen = !isModalOpen)}
 		>
-		{#if invalid}
-			<p class="text-4xl font-bold mx-auto text-red-600">{result}</p>
-		{:else}
-			<p class="text-4xl font-bold mx-auto">{result}</p>
-		{/if}
+			<div>
+				<History size={20} />
+			</div>
+		</button>
+		<p class="text-4xl font-bold mx-auto {invalid ? 'text-red-600' : ''}">{result}</p>
 	</div>
 	<div class="input-group h-12 grid-cols-[auto_1fr_auto] w-full">
-		<div class="ig-cell preset-tonal"><SquareSigma /></div>
-		<div class="overflow-x-scroll flex items-center flex-1 ig-input">
-			<p class="whitespace-nowrap">{formula}</p>
+		<div class="ig-cell preset-tonal"><SquareSigma class="ml-1" /></div>
+		<div class="overflow-x-scroll overflow-y-hidden flex items-center flex-1 ig-input">
+			<p class="whitespace-nowrap font-semibold">{formula}</p>
 		</div>
-		<button class="preset-tonal shrink-0 ig-cell" onclick={saveResult}
-			><span class="px-1 font-bold text-xl">=</span></button
+		<button class="preset-filled-surface-200-800 shrink-0 ig-cell" onclick={saveResult}
+			><span class="px-1 mr-1 font-bold text-xl">=</span></button
 		>
 	</div>
 	<div class="p-4 font-bold">
@@ -128,8 +130,12 @@
 			<button
 				type="button"
 				class="btn-icon btn-icon-lg preset-filled-error-500 text-white shadow-lg hover:shadow-none"
-				onclick={() => (formula = formula.slice(0, -1))}><Delete size={30} /></button
+				onclick={() => (formula = formula.slice(0, -1))}
 			>
+				<div>
+					<Delete size={30} />
+				</div>
+			</button>
 			{#each ['7', '8', '9', '*', '4', '5', '6', '/', '1', '2', '3', '+', '.', '0', '%', '-'] as key}
 				<button
 					type="button"
