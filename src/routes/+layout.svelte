@@ -4,8 +4,8 @@
 	import 'highlight.js/styles/github-dark.css';
 	import { AppBar } from '@skeletonlabs/skeleton-svelte';
 
-	import { Github } from 'lucide-svelte';
 	import LightSwitch from '$lib/components/LightSwitch.svelte';
+	import { Github } from '@lucide/svelte';
 
 	interface Props {
 		children?: import('svelte').Snippet;
@@ -21,7 +21,7 @@
 		{/snippet}
 		<h1 class="text-xl font-bold">Calculator</h1>
 		{#snippet trail()}
-			<Github />
+			<Github class="my-auto"/>
 		{/snippet}
 	</AppBar>
 	{@render children?.()}
