@@ -2,7 +2,7 @@
 	import HistoryStorage from '$lib/stores/history';
 	import { evaluate } from 'mathjs';
 	import { onMount } from 'svelte';
-	import { elasticOut } from 'svelte/easing';
+	import { cubicInOut, elasticOut } from 'svelte/easing';
 	import { fade } from 'svelte/transition';
 
 	let history: string[] = $state([]);
@@ -36,7 +36,7 @@
 	onMount(async () => {
 		/**
 		 * Loads history data from localForage and updates the 'history' state.
-		 */
+		 */ 
 		const stored = await HistoryStorage.fetch();
 		history = stored ?? [];
 	});
@@ -44,8 +44,8 @@
 
 <div class="fixed inset-0 bg-black/50 z-50 flex justify-center">
 	<div
-		class="card flex flex-col preset-filled-surface-50-950 justify-between h-[60vh] w-full max-w-lg items-center m-5 my-auto overflow-scroll"
-		transition:fade={{ duration: 200 }}
+		class="card flex flex-col preset-filled-surface-50-950 justify-between h-[60vh] w-full max-w-lg items-center m-5 my-auto overflow-y-scroll overflow-x-hidden"
+		transition:fade={{ duration: 200, easing: cubicInOut }}
 	>
 		<div class="w-full">
 			<h1
@@ -68,7 +68,7 @@
 			</div>
 		</div>
 		<div class="sticky bottom-0 z-10 text-xl font-bold w-full text-center py-2 px-2">
-			<button class="btn preset-filled-error-500 text-lg text-white w-full" onclick={clearHistory}>
+			<button class="btn preset-filled-error-500 text-white w-full py-1.5" onclick={clearHistory}>
 				Clear History
 			</button>
 		</div>
