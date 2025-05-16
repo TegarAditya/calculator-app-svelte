@@ -13,12 +13,18 @@
 	 * @prop {boolean} invalid - Indicates if the formula is invalid.
 	 * @prop {boolean} isModalOpen - Indicates if the modal is open.
 	 */
-	let formula: string = '';
-	let result: string = '';
-	let invalid: boolean = false;
-	let isModalOpen: boolean = false;
+	let formula: string = $state('');
+	let result: string = $state('0');
+	let invalid: boolean = $state(false);
+	let isModalOpen: boolean = $state(false);
 
-	$: result = calculate(formula);
+	$effect(() => {
+		if (formula !== '') {
+			result = calculate(formula);
+		} else {
+			result = '0';
+		}
+	});
 
 	/**
 	 * Calculates the result of a mathematical expression.
@@ -54,8 +60,8 @@
 	 *
 	 * @param {any} item - The item containing the history details.
 	 */
-	function useHistory(item: CustomEvent) {
-		formula = item.detail;
+	function useHistory(item: string) {
+		formula = item;
 
 		isModalOpen = false;
 	}
@@ -77,7 +83,7 @@
 	<div class="card w-full min-h-40 my-5 flex items-center overflow-auto relative">
 		<button
 			class="btn-icon btn-icon-sm shadow-md variant-filled-primary absolute top-2 right-2"
-			on:click={() => (isModalOpen = !isModalOpen)}><History size={20} /></button
+			onclick={() => (isModalOpen = !isModalOpen)}><History size={20} /></button
 		>
 		{#if invalid}
 			<p class="text-4xl font-bold mx-auto text-red-600">{result}</p>
@@ -90,7 +96,7 @@
 		<div class="overflow-x-scroll flex-1">
 			<p class="whitespace-nowrap">{formula}</p>
 		</div>
-		<button class="variant-filled-surface flex-shrink-0" on:click={saveResult}
+		<button class="variant-filled-surface flex-shrink-0" onclick={saveResult}
 			><span class="px-2">=</span></button
 		>
 	</div>
@@ -100,7 +106,7 @@
 				<button
 					type="button"
 					class="btn-icon btn-icon-xl variant-filled-surface shadow-lg hover:shadow-none"
-					on:click={() => (formula += key)}
+					onclick={() => (formula += key)}
 				>
 					{key}
 				</button>
@@ -108,7 +114,7 @@
 			<button
 				type="button"
 				class="btn-icon btn-icon-xl variant-filled-error shadow-lg hover:shadow-none"
-				on:click={() => (formula = '')}
+				onclick={() => (formula = '')}
 			>
 				{#if formula === ''}
 					AC
@@ -121,13 +127,13 @@
 			<button
 				type="button"
 				class="btn-icon btn-icon-xl variant-filled-error shadow-lg hover:shadow-none"
-				on:click={() => (formula = formula.slice(0, -1))}><Delete size={30} /></button
+				onclick={() => (formula = formula.slice(0, -1))}><Delete size={30} /></button
 			>
 			{#each ['7', '8', '9', '*', '4', '5', '6', '/', '1', '2', '3', '+', '.', '0', '%', '-'] as key}
 				<button
 					type="button"
 					class="btn-icon btn-icon-xl variant-filled-surface shadow-lg hover:shadow-none"
-					on:click={() => (formula += key)}
+					onclick={() => (formula += key)}
 				>
 					{#if key === '/'}
 						÷
@@ -143,6 +149,6 @@
 </div>
 <div>
 	{#if isModalOpen}
-		<Modal on:select={useHistory} />
+		<Modal select={useHistory} />
 	{/if}
 </div>
