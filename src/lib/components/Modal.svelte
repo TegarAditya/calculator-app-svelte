@@ -42,21 +42,21 @@
 	});
 </script>
 
-<div class="fixed inset-0 bg-black bg-opacity-50 z-50 flex justify-center">
+<div class="fixed inset-0 bg-black/50 z-50 flex justify-center">
 	<div
-		class="card flex flex-col justify-between h-[60vh] w-full max-w-lg items-center m-5 my-auto overflow-scroll"
+		class="card flex flex-col preset-filled-surface-50-950 justify-between h-[60vh] w-full max-w-lg items-center m-5 my-auto overflow-scroll"
 		transition:fade={{ duration: 200 }}
 	>
 		<div class="w-full">
 			<h1
-				class="sticky top-0 variant-filled-primary z-10 text-xl font-bold w-full text-center py-2"
+				class="sticky top-0 preset-filled-primary-500 z-10 text-lg text-white font-bold w-full text-center py-2"
 			>
 				History
 			</h1>
 			<div class="px-3 py-2">
 				{#each history as item, i}
 					<button
-						class="btn w-full variant-filled-surface my-1"
+						class="btn w-full preset-filled-surface-500 my-1"
 						onclick={() => selectHistoryItem(item)}
 						out:fade={{ duration: 300, easing: elasticOut }}
 					>
@@ -68,7 +68,7 @@
 			</div>
 		</div>
 		<div class="sticky bottom-0 z-10 text-xl font-bold w-full text-center py-2 px-2">
-			<button class="btn variant-filled-error w-full" onclick={clearHistory}>
+			<button class="btn preset-filled-error-500 text-lg text-white w-full" onclick={clearHistory}>
 				Clear History
 			</button>
 		</div>
