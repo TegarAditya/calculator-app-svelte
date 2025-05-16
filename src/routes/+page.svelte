@@ -44,8 +44,8 @@
 	}
 
 	/**
-	 * -Saves the current calculation to history if valid.
-	 * Updates the formula with the latest result.
+	 * - Saves the current calculation to history if valid.
+	 * - Updates the formula with the latest result.
 	 */
 	async function saveResult() {
 		if (invalid || formula.trim() === '') return;
@@ -58,7 +58,7 @@
 	/**
 	 * Handles the history of the calculator app.
 	 *
-	 * @param {any} item - The item containing the history details.
+	 * @param item - The item containing the history string.
 	 */
 	function useHistory(item: string) {
 		formula = item;
