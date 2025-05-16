@@ -80,10 +80,11 @@
 </script>
 
 <div class="container mx-auto flex flex-col justify-center items-center p-4 max-w-lg">
-	<div class="card w-full min-h-40 my-5 flex items-center overflow-auto relative">
+	<div class="card w-full min-h-40 my-5 preset-filled-surface-100-900 flex items-center overflow-auto relative">
 		<button
-			class="btn-icon btn-icon-sm shadow-md variant-filled-primary absolute top-2 right-2"
-			onclick={() => (isModalOpen = !isModalOpen)}><History size={20} /></button
+			type="button"
+			class="btn-icon rounded-full shadow-md preset-filled-primary-500 text-white absolute p-2 top-2 right-2"
+			onclick={() => (isModalOpen = !isModalOpen)}><History /></button
 		>
 		{#if invalid}
 			<p class="text-4xl font-bold mx-auto text-red-600">{result}</p>
@@ -91,21 +92,21 @@
 			<p class="text-4xl font-bold mx-auto">{result}</p>
 		{/if}
 	</div>
-	<div class="input-group input-group-divider h-12 grid-cols-[auto_1fr_auto]">
-		<div class="input-group-shim"><SquareSigma /></div>
-		<div class="overflow-x-scroll flex-1">
+	<div class="input-group h-12 grid-cols-[auto_1fr_auto] w-full">
+		<div class="ig-cell preset-tonal"><SquareSigma /></div>
+		<div class="overflow-x-scroll flex items-center flex-1 ig-input">
 			<p class="whitespace-nowrap">{formula}</p>
 		</div>
-		<button class="variant-filled-surface shrink-0" onclick={saveResult}
-			><span class="px-2">=</span></button
+		<button class="preset-tonal shrink-0 ig-cell" onclick={saveResult}
+			><span class="px-1 font-bold text-xl">=</span></button
 		>
 	</div>
-	<div class="p-4">
+	<div class="p-4 font-bold">
 		<div class="grid grid-cols-4 gap-2">
 			{#each ['(', ')'] as key}
 				<button
 					type="button"
-					class="btn-icon btn-icon-xl variant-filled-surface shadow-lg hover:shadow-none"
+					class="btn-icon btn-icon-lg preset-filled-surface-500 shadow-lg hover:shadow-none"
 					onclick={() => (formula += key)}
 				>
 					{key}
@@ -113,7 +114,7 @@
 			{/each}
 			<button
 				type="button"
-				class="btn-icon btn-icon-xl variant-filled-error shadow-lg hover:shadow-none"
+				class="btn-icon btn-icon-lg preset-filled-error-500 text-white shadow-lg hover:shadow-none"
 				onclick={() => (formula = '')}
 			>
 				{#if formula === ''}
@@ -126,19 +127,19 @@
 			</button>
 			<button
 				type="button"
-				class="btn-icon btn-icon-xl variant-filled-error shadow-lg hover:shadow-none"
+				class="btn-icon btn-icon-lg preset-filled-error-500 text-white shadow-lg hover:shadow-none"
 				onclick={() => (formula = formula.slice(0, -1))}><Delete size={30} /></button
 			>
 			{#each ['7', '8', '9', '*', '4', '5', '6', '/', '1', '2', '3', '+', '.', '0', '%', '-'] as key}
 				<button
 					type="button"
-					class="btn-icon btn-icon-xl variant-filled-surface shadow-lg hover:shadow-none"
+					class="btn-icon btn-icon-lg preset-filled-surface-500 shadow-lg hover:shadow-none"
 					onclick={() => (formula += key)}
 				>
 					{#if key === '/'}
 						÷
 					{:else if key === '*'}
-						&times;
+						×
 					{:else}
 						{key}
 					{/if}
@@ -152,3 +153,9 @@
 		<Modal select={useHistory} />
 	{/if}
 </div>
+
+<style>
+	.btn-icon-lg {
+		padding: 1.3rem;
+	}
+</style>
