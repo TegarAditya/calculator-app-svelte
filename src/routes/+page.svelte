@@ -81,7 +81,7 @@
 
 <div class="container mx-auto flex flex-col justify-center items-center p-4 max-w-lg">
 	<div
-		class="card w-full min-h-40 my-5 preset-filled-surface-100-900 flex items-center overflow-auto relative"
+		class="card w-full min-h-40 my-5 px-1 preset-filled-surface-100-900 flex items-center overflow-hidden relative"
 	>
 		<button
 			type="button"
@@ -92,7 +92,14 @@
 				<History size={20} />
 			</div>
 		</button>
-		<p class="text-4xl font-bold mx-auto {invalid ? 'text-red-600' : ''}">{result}</p>
+		<p
+			class="font-bold mx-auto wrap-anywhere text-right"
+			class:text-2xl={result.toString().length > 10}
+			class:text-4xl={result.toString().length <= 10}
+			class:text-red-600={invalid}
+		>
+			{result}
+		</p>
 	</div>
 	<div class="input-group h-12 grid-cols-[auto_1fr_auto] w-full">
 		<div class="ig-cell preset-tonal"><SquareSigma class="ml-1" /></div>
