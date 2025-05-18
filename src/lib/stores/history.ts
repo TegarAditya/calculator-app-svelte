@@ -28,7 +28,7 @@ class HistoryStorage {
 
 	/**
 	 * Remove a value from the history collection
-	 * @param val The value to remove from the history collection
+	 * @param index The index of the value to remove from the history collection
 	 */
 	public static async remove(index: number): Promise<void> {
 		const collection = (await localforage.getItem<string[]>(this.key)) || [];
