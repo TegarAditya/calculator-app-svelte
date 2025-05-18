@@ -20,9 +20,9 @@
 	/**
 	 * Remove the history.
 	 */
-	function removeHistoryItem(item: string) {
-		history = history.filter((h) => h !== item);
-		localStorage.setItem('history', JSON.stringify(history));
+	function removeHistoryItem(index: number) {
+		history = history.filter((_, i) => i !== index);
+		HistoryStorage.remove(index);
 	}
 
 	/**
@@ -36,7 +36,7 @@
 	onMount(async () => {
 		/**
 		 * Loads history data from localForage and updates the 'history' state.
-		 */ 
+		 */
 		const stored = await HistoryStorage.fetch();
 		history = stored ?? [];
 	});
@@ -55,19 +55,21 @@
 			</h1>
 			<div class="px-3 py-2">
 				{#each history as item, i}
-					<button
-						class="btn w-full preset-filled-surface-500 my-1"
-						onclick={() => selectHistoryItem(item)}
-						out:fade={{ duration: 300, easing: elasticOut }}
-					>
-						<p class="text-xl font-semibold my-auto flex-none text-right">
-							{item} = <span>{evaluate(item)}</span>
-						</p>
-					</button>
+					<div class="flex items-center my-1 group">
+						<button
+							class="btn w-full preset-filled-surface-500 flex-1"
+							onclick={() => selectHistoryItem(item)}
+							out:fade={{ duration: 300, easing: elasticOut }}
+						>
+							<p class="text-xl font-semibold my-auto flex-none text-right">
+								{item} = <span>{evaluate(item)}</span>
+							</p>
+						</button>
+					</div>
 				{/each}
 			</div>
 		</div>
-		<div class="sticky bottom-0 z-10 text-xl font-bold w-full text-center py-2 px-2">
+		<div class="sticky bottom-0 z-10 preset-filled-surface-50-950 text-xl font-bold w-full text-center py-2 px-2">
 			<button class="btn preset-filled-error-500 text-white w-full py-1.5" onclick={clearHistory}>
 				Clear History
 			</button>
