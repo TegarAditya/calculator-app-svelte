@@ -1,28 +1,29 @@
-# create-svelte
+# Simple Calculator App Made With Svelte 5
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/main/packages/create-svelte).
+This project has an initial aim to fulfill the BNSP competency certification (programmer occupation). Feel free to use this project to practice object-oriented programming (OOP) using JavaScript and reactivity in Svelte 5.
 
-## Creating a project
+## Project Preparation
 
-If you're seeing this, you've probably already done this step. Congrats!
+Let's prepare our workspace(s)!
 
 ```bash
-# create a new project in the current directory
-npm create svelte@latest
+# clone this repository
+git pull https://github.com/TegarAditya/calculator-app-svelte.git
 
-# create a new project in my-app
-npm create svelte@latest my-app
+# navigate to project directory
+cd calculator-app-svelte
 ```
 
-## Developing
+## Running Development Environment
 
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+Once you've cloned and moved to the project's repository folder, you'll start running a few steps including package installation and running dev commands.
 
 ```bash
-npm run dev
+# install package
+pnpm install
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+# start the dev server
+pnpm dev
 ```
 
 ## Building
@@ -30,9 +31,9 @@ npm run dev -- --open
 To create a production version of your app:
 
 ```bash
-npm run build
+pnpm build
 ```
 
-You can preview the production build with `npm run preview`.
+You can preview the production build with `pnpm preview`.
 
 > To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
