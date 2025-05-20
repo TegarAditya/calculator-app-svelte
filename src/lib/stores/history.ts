@@ -8,6 +8,16 @@ class HistoryStorage {
 	private static key = 'history';
 
 	/**
+	 * HistoryStorage constructor.
+	 * @param key The key to use for the history collection in local storage.
+	 */
+	constructor(key?: string) {
+		if (key) {
+			HistoryStorage.key = key;
+		}
+	}
+
+	/**
 	 * Insert a value into the history collection
 	 * @param val The value to insert into the history collection
 	 */
