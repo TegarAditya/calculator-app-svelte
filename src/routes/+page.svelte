@@ -6,6 +6,16 @@
 	import { onMount } from 'svelte';
 
 	/**
+	 * Represents the keys used in the calculator's formula input.
+	 */
+	const FORMULA_KEY: string[] = [
+		'7','8','9','*',
+		'4','5','6','/',
+		'1','2','3','+',
+		'.','0','%','-'
+	];
+
+	/**
 	 * Represents the state variables used in the page component.
 	 *
 	 * @prop {string} formula - The current formula entered by the user.
@@ -79,21 +89,28 @@
 	});
 </script>
 
-<div class="container mx-auto flex flex-col justify-center items-center p-4 max-w-lg">
+<svelte:head>
+	<title>Calculator</title>
+	<meta name="description" content="A simple calculator app built with Svelte and Skeleton UI." />
+</svelte:head>
+
+<div class="container mx-auto flex max-w-lg flex-col items-center justify-center p-4">
 	<div
-		class="card w-full min-h-40 my-5 px-1 preset-filled-surface-100-900 flex items-center overflow-hidden relative"
+		class="card preset-filled-surface-100-900 relative my-5 flex min-h-40 w-full items-center overflow-hidden px-1"
 	>
 		<button
 			type="button"
-			class="btn-icon rounded-full shadow-md preset-filled-primary-500 text-white absolute p-2 top-2 right-2"
+			class="btn-icon preset-filled-primary-500 absolute top-2 right-2 rounded-full p-2 text-white shadow-md"
 			onclick={() => (isModalOpen = !isModalOpen)}
+			name="history-button"
+			aria-label="Open history"
 		>
 			<div>
 				<History size={20} />
 			</div>
 		</button>
 		<p
-			class="font-bold mx-auto wrap-anywhere text-right"
+			class="mx-auto text-right font-bold wrap-anywhere"
 			class:text-2xl={result.toString().length > 10}
 			class:text-4xl={result.toString().length <= 10}
 			class:text-red-600={invalid}
@@ -101,14 +118,19 @@
 			{result}
 		</p>
 	</div>
-	<div class="input-group h-12 grid-cols-[auto_1fr_auto] w-full">
+	<div class="input-group h-12 w-full grid-cols-[auto_1fr_auto]">
 		<div class="ig-cell preset-tonal"><SquareSigma class="ml-1" /></div>
-		<div class="overflow-x-scroll overflow-y-hidden flex items-center flex-1 ig-input">
-			<p class="whitespace-nowrap font-semibold">{formula}</p>
+		<div class="ig-input flex flex-1 items-center overflow-x-scroll overflow-y-hidden">
+			<p class="font-semibold whitespace-nowrap">{formula}</p>
 		</div>
-		<button class="preset-filled-surface-200-800 shrink-0 ig-cell" onclick={saveResult}
-			><span class="px-1 mr-1 font-bold text-xl">=</span></button
+		<button
+			class="preset-filled-surface-200-800 ig-cell shrink-0"
+			onclick={saveResult}
+			name="save-button"
+			aria-label="Save result"
 		>
+			<span class="mr-1 px-1 text-xl font-bold">=</span>
+		</button>
 	</div>
 	<div class="p-4 font-bold">
 		<div class="grid grid-cols-4 gap-2">
@@ -138,12 +160,14 @@
 				type="button"
 				class="btn-icon btn-icon-lg preset-filled-error-500 text-white shadow-lg hover:shadow-none"
 				onclick={() => (formula = formula.slice(0, -1))}
+				name="delete-button"
+				aria-label="Delete last character"
 			>
 				<div>
 					<Delete size={30} />
 				</div>
 			</button>
-			{#each ['7', '8', '9', '*', '4', '5', '6', '/', '1', '2', '3', '+', '.', '0', '%', '-'] as key}
+			{#each FORMULA_KEY as key}
 				<button
 					type="button"
 					class="btn-icon btn-icon-lg preset-filled-surface-500 shadow-lg hover:shadow-none"
