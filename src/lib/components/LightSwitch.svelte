@@ -26,6 +26,10 @@
 </svelte:head>
 
 <Switch {checked} {onCheckedChange} controlActive="bg-surface-200">
-	{#snippet activeChild()}<IconSun size="14" />{/snippet}
-	{#snippet inactiveChild()}<IconMoon size="14" />{/snippet}
+	{#snippet activeChild()}
+		<IconSun size="14" aria-label="Light Mode" id="switch:s1:label" />
+	{/snippet}
+	{#snippet inactiveChild()}
+		<IconMoon size="14" aria-label="Dark Mode" id="switch:s1:label" />
+	{/snippet}
 </Switch>
