@@ -1,4 +1,4 @@
-import { describe, it, expect, beforeEach, vi } from 'vitest';
+import { describe, it, expect, beforeEach, vi, afterAll } from 'vitest';
 import localforage from 'localforage';
 import HistoryStorage from '$lib/stores/history';
 
@@ -10,18 +10,19 @@ vi.mock('localforage', () => ({
 	}
 }));
 
-describe('HistoryStorage', () => {
+describe('HistoryStorage (instance)', () => {
 	const key = 'history_test';
+	let history: HistoryStorage;
 
 	beforeEach(() => {
 		vi.clearAllMocks();
-		new HistoryStorage(key);
+		history = new HistoryStorage(key);
 	});
 
 	it('should insert a value into an empty history', async () => {
 		(localforage.getItem as any).mockResolvedValueOnce(null);
 
-		await HistoryStorage.insert('test1');
+		await history.insert('test1');
 
 		expect(localforage.getItem).toHaveBeenCalledWith(key);
 		expect(localforage.setItem).toHaveBeenCalledWith(key, ['test1']);
@@ -30,7 +31,7 @@ describe('HistoryStorage', () => {
 	it('should insert a value into existing history', async () => {
 		(localforage.getItem as any).mockResolvedValueOnce(['old']);
 
-		await HistoryStorage.insert('new');
+		await history.insert('new');
 
 		expect(localforage.getItem).toHaveBeenCalledWith(key);
 		expect(localforage.setItem).toHaveBeenCalledWith(key, ['old', 'new']);
@@ -40,7 +41,7 @@ describe('HistoryStorage', () => {
 		const data = ['a', 'b'];
 		(localforage.getItem as any).mockResolvedValueOnce(data);
 
-		const result = await HistoryStorage.fetch();
+		const result = await history.fetch();
 
 		expect(localforage.getItem).toHaveBeenCalledWith(key);
 		expect(result).toEqual(data);
@@ -49,7 +50,7 @@ describe('HistoryStorage', () => {
 	it('should return empty array if no history exists', async () => {
 		(localforage.getItem as any).mockResolvedValueOnce(null);
 
-		const result = await HistoryStorage.fetch();
+		const result = await history.fetch();
 
 		expect(result).toEqual([]);
 	});
@@ -57,7 +58,7 @@ describe('HistoryStorage', () => {
 	it('should remove a value at a valid index', async () => {
 		(localforage.getItem as any).mockResolvedValueOnce(['a', 'b', 'c']);
 
-		await HistoryStorage.remove(1);
+		await history.remove(1);
 
 		expect(localforage.setItem).toHaveBeenCalledWith(key, ['a', 'c']);
 	});
@@ -65,13 +66,13 @@ describe('HistoryStorage', () => {
 	it('should not remove a value at an invalid index', async () => {
 		(localforage.getItem as any).mockResolvedValueOnce(['a', 'b']);
 
-		await HistoryStorage.remove(5);
+		await history.remove(5);
 
 		expect(localforage.setItem).not.toHaveBeenCalled();
 	});
 
 	it('should clear the history', async () => {
-		await HistoryStorage.clear();
+		await history.clear();
 
 		expect(localforage.removeItem).toHaveBeenCalledWith(key);
 	});
