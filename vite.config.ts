@@ -4,5 +4,8 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vite';
 
 export default defineConfig({
-	plugins: [devtoolsJson(),tailwindcss(), sveltekit()]
+	plugins: [devtoolsJson(), tailwindcss(), sveltekit()],
+	build: {
+		sourcemap: true
+	}
 });
