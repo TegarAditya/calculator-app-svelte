@@ -5,23 +5,21 @@ import localforage from 'localforage';
  * a history collection in local storage using localforage.
  */
 class HistoryStorage {
-	private static key = 'history';
+	private key: string;
 
 	/**
 	 * HistoryStorage constructor.
 	 * @param key The key to use for the history collection in local storage.
 	 */
-	constructor(key?: string) {
-		if (key) {
-			HistoryStorage.key = key;
-		}
+	constructor(key: string = 'history') {
+		this.key = key;
 	}
 
 	/**
 	 * Insert a value into the history collection
 	 * @param val The value to insert into the history collection
 	 */
-	public static async insert(val: string): Promise<void> {
+	public async insert(val: string): Promise<void> {
 		const collection = (await localforage.getItem<string[]>(this.key)) || [];
 		collection.push(val);
 		await localforage.setItem(this.key, collection);
@@ -31,7 +29,7 @@ class HistoryStorage {
 	 * Retrieve the history collection
 	 * @returns The history collection
 	 */
-	public static async fetch(): Promise<string[]> {
+	public async fetch(): Promise<string[]> {
 		const collection = (await localforage.getItem<string[]>(this.key)) || [];
 		return collection;
 	}
@@ -40,7 +38,7 @@ class HistoryStorage {
 	 * Remove a value from the history collection
 	 * @param index The index of the value to remove from the history collection
 	 */
-	public static async remove(index: number): Promise<void> {
+	public async remove(index: number): Promise<void> {
 		const collection = (await localforage.getItem<string[]>(this.key)) || [];
 		if (index > -1 && index < collection.length) {
 			collection.splice(index, 1);
@@ -49,11 +47,16 @@ class HistoryStorage {
 	}
 
 	/**
-	 * Clear the history collection
+	 * Clears the history collection
 	 */
-	public static async clear(): Promise<void> {
+	public async clear(): Promise<void> {
 		await localforage.removeItem(this.key);
 	}
+
+	/**
+	 * A default instance that uses the 'history' key.
+	 */
+	static default = new HistoryStorage();
 }
 
 export default HistoryStorage;

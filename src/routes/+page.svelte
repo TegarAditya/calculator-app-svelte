@@ -1,13 +1,14 @@
 <script lang="ts">
+	import type HistoryStorage from '$lib/stores/history';
+	import type { MathJsInstance } from 'mathjs';
 	import Modal from '$lib/components/Modal.svelte';
-	import HistoryStorage from '$lib/stores/history';
 	import { Delete, History, SquareSigma } from '@lucide/svelte';
-	import { evaluate } from 'mathjs';
 	import { onMount } from 'svelte';
 
 	/**
 	 * Represents the keys used in the calculator's formula input.
 	 */
+	// prettier-ignore
 	const FORMULA_KEY: string[] = [
 		'7','8','9','*',
 		'4','5','6','/',
@@ -28,10 +29,13 @@
 	let invalid: boolean = $state(false);
 	let isModalOpen: boolean = $state(false);
 
+	let mathInstance: MathJsInstance | null = $state(null);
+	let historyStore: InstanceType<typeof HistoryStorage> | null = $state(null);
+
 	$effect(() => {
-		if (formula !== '') {
+		if (mathInstance && formula !== '') {
 			result = calculate(formula);
-		} else {
+		} else if (!formula) {
 			result = '0';
 		}
 	});
@@ -39,15 +43,16 @@
 	/**
 	 * Calculates the result of a mathematical expression.
 	 *
-	 * @param {string} string - The mathematical expression to evaluate.
+	 * @param {string} expression - The mathematical expression to evaluate.
 	 * @returns {string} - The result of the evaluation.
 	 */
-	function calculate(string: string): string {
+	function calculate(expression: string): string {
+		if (!mathInstance || expression.trim() === '') return '0';
+
 		try {
 			invalid = false;
-			if (string === '') return '0';
-			return evaluate(string);
-		} catch (error) {
+			return mathInstance.evaluate(expression).toString();
+		} catch {
 			invalid = true;
 			return result;
 		}
@@ -58,11 +63,11 @@
 	 * - Updates the formula with the latest result.
 	 */
 	async function saveResult() {
-		if (invalid || formula.trim() === '') return;
+		if (!historyStore || invalid || formula.trim() === '') return;
 
-		await HistoryStorage.insert(formula);
+		await historyStore.insert(formula);
 
-		formula = result?.toString() ?? '';
+		formula = result.toString();
 	}
 
 	/**
@@ -76,10 +81,16 @@
 		isModalOpen = false;
 	}
 
-	onMount(() => {
+	onMount(async () => {
 		document.onkeydown = function (e) {
 			return false;
 		};
+
+		const mathjs = await import('mathjs');
+		mathInstance = mathjs.create(mathjs.all);
+
+		const HistoryStorageModule = await import('$lib/stores/history');
+		historyStore = new HistoryStorageModule.default('history');
 
 		document.addEventListener('click', function (event) {
 			if (event.target && !(event.target as Element).closest('.card')) {
@@ -187,7 +198,7 @@
 </div>
 <div>
 	{#if isModalOpen}
-		<Modal select={useHistory} />
+		<Modal {historyStore} {mathInstance} select={useHistory} />
 	{/if}
 </div>
 

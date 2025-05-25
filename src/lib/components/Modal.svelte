@@ -1,12 +1,28 @@
 <script lang="ts">
-	import HistoryStorage from '$lib/stores/history';
-	import { evaluate } from 'mathjs';
+	import type HistoryStorage from '$lib/stores/history';
+	import { type MathJsInstance } from 'mathjs';
 	import { onMount } from 'svelte';
 	import { cubicInOut, elasticOut } from 'svelte/easing';
 	import { fade } from 'svelte/transition';
 
 	let history: string[] = $state([]);
-	let { select } = $props();
+	const { mathInstance, historyStore, select } = $props<{
+		mathInstance: MathJsInstance | null;
+		historyStore: InstanceType<typeof HistoryStorage> | null;
+		select: (item: string) => void;
+	}>();
+
+	/**
+	 * Evaluates a math expression string safely.
+	 */
+	function evaluateExpression(expr: string): string {
+		if (!mathInstance) return '';
+		try {
+			return mathInstance.evaluate(expr).toString();
+		} catch {
+			return 'Invalid';
+		}
+	}
 
 	/**
 	 * Selects a history item.
@@ -18,59 +34,49 @@
 	}
 
 	/**
-	 * Remove the history.
-	 */
-	function removeHistoryItem(index: number) {
-		history = history.filter((_, i) => i !== index);
-		HistoryStorage.remove(index);
-	}
-
-	/**
 	 * Clears the history.
 	 */
 	async function clearHistory() {
 		history = [];
-		await HistoryStorage.clear();
+		await historyStore?.clear();
 	}
 
 	onMount(async () => {
-		/**
-		 * Loads history data from localForage and updates the 'history' state.
-		 */
-		const stored = await HistoryStorage.fetch();
-		history = stored ?? [];
+		history = await historyStore.fetch(); // Fetch initial history
 	});
 </script>
 
-<div class="fixed inset-0 bg-black/50 z-50 flex justify-center">
+<div class="fixed inset-0 z-50 flex justify-center bg-black/50">
 	<div
-		class="card flex flex-col preset-filled-surface-50-950 justify-between h-[60vh] w-full max-w-lg items-center m-5 my-auto overflow-y-scroll overflow-x-hidden"
+		class="card preset-filled-surface-50-950 m-5 my-auto flex h-[60vh] w-full max-w-lg flex-col items-center justify-between overflow-x-hidden overflow-y-scroll"
 		transition:fade={{ duration: 200, easing: cubicInOut }}
 	>
 		<div class="w-full">
 			<h1
-				class="sticky top-0 preset-filled-primary-500 z-10 text-lg text-white font-bold w-full text-center py-2"
+				class="preset-filled-primary-500 sticky top-0 z-10 w-full py-2 text-center text-lg font-bold text-white"
 			>
 				History
 			</h1>
 			<div class="px-3 py-2">
 				{#each history as item, i}
-					<div class="flex items-center my-1 group">
+					<div class="group my-1 flex items-center">
 						<button
-							class="btn w-full preset-filled-surface-500 flex-1"
+							class="btn preset-filled-surface-500 w-full flex-1"
 							onclick={() => selectHistoryItem(item)}
 							out:fade={{ duration: 300, easing: elasticOut }}
 						>
-							<p class="text-xl font-semibold my-auto flex-none text-right">
-								{item} = <span>{evaluate(item)}</span>
+							<p class="my-auto flex-none text-right text-xl font-semibold">
+								{item} = <span>{evaluateExpression(item)}</span>
 							</p>
 						</button>
 					</div>
 				{/each}
 			</div>
 		</div>
-		<div class="sticky bottom-0 z-10 preset-filled-surface-50-950 text-xl font-bold w-full text-center py-2 px-2">
-			<button class="btn preset-filled-error-500 text-white w-full py-1.5" onclick={clearHistory}>
+		<div
+			class="preset-filled-surface-50-950 sticky bottom-0 z-10 w-full px-2 py-2 text-center text-xl font-bold"
+		>
+			<button class="btn preset-filled-error-500 w-full py-1.5 text-white" onclick={clearHistory}>
 				Clear History
 			</button>
 		</div>
