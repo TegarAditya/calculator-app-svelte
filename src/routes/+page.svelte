@@ -29,6 +29,12 @@
 	let invalid: boolean = $state(false);
 	let isModalOpen: boolean = $state(false);
 
+	/**
+	 * Represents the instances of Math.js and HistoryStorage.
+	 *
+	 * @prop {MathJsInstance | null} mathInstance - The instance of Math.js for calculations.
+	 * @prop {InstanceType<typeof HistoryStorage> | null} historyStore - The instance of HistoryStorage for managing history.
+	 */
 	let mathInstance: MathJsInstance | null = $state(null);
 	let historyStore: InstanceType<typeof HistoryStorage> | null = $state(null);
 
