@@ -5,15 +5,19 @@
 
 	let isFullScreen: boolean = $state(false);
 
-	function toggleFullScreen() {
-		if (!document.fullscreenElement) {
-			document.documentElement.requestFullscreen();
-			isFullScreen = true;
-		} else {
-			if (document.exitFullscreen) {
-				document.exitFullscreen();
-				isFullScreen = false;
+	async function toggleFullScreen() {
+		try {
+			if (!document.fullscreenElement) {
+				document.documentElement.requestFullscreen();
+				isFullScreen = true;
+			} else {
+				if (document.exitFullscreen) {
+					document.exitFullscreen();
+					isFullScreen = false;
+				}
 			}
+		} catch (error) {
+			console.error('Error toggling full screen:', error);
 		}
 	}
 </script>
