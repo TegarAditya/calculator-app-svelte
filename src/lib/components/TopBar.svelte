@@ -1,6 +1,7 @@
 <script>
 	import { Github } from '@lucide/svelte';
 	import LightSwitch from './LightSwitch.svelte';
+	import FullscreenToggle from './FullscreenToggle.svelte';
 </script>
 
 <header
@@ -12,7 +13,7 @@
 		<LightSwitch />
 	</div>
 	<span class="text-center text-xl font-bold">Calculator</span>
-	<div class="flex justify-end">
+	<div class="flex justify-end gap-2">
 		<a
 			href="https://github.com/TegarAditya/calculator-app-svelte"
 			target="_blank"
@@ -21,5 +22,6 @@
 		>
 			<Github class="h-6 w-6" />
 		</a>
+		<FullscreenToggle />
 	</div>
 </header>
