@@ -5,6 +5,9 @@ import { defineConfig } from 'vite';
 
 export default defineConfig({
 	plugins: [devtoolsJson(), tailwindcss(), sveltekit()],
+	test: {
+		include: ['**/*.test.{js,ts}'],
+	},
 	build: {
 		sourcemap: true
 	}
