@@ -9,7 +9,7 @@ test.describe('LightSwitch component', () => {
 		});
 	});
 
-	test('should render the light switch component', async ({ page }) => {
+	test('should render the switch component', async ({ page }) => {
 		const lightSwitch = page.getByTestId('switch-input');
 		await expect(lightSwitch).toBeVisible();
 
