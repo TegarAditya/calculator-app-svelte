@@ -22,7 +22,7 @@
 	}
 </script>
 
-<button onclick={toggleFullScreen} aria-label="Toggle Full Screen">
+<button onclick={toggleFullScreen} aria-label="Toggle Full Screen" data-testid="fullscreen-toggle">
 	{#if isFullScreen}
 		<Minimize2 size={iconSize} />
 	{:else}
