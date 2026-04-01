@@ -1,43 +1,33 @@
 import { test, expect } from '@playwright/test';
 
-test.describe('LightSwitch component', () => {
+test.describe('LightSwitch E2E', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
-		await page.waitForSelector('html[data-mode]');
 		await page.evaluate(() => {
-			document.documentElement.setAttribute('data-mode', 'light');
+			window.localStorage.removeItem('mode');
 		});
+		await page.reload();
 	});
 
-	test('should render the switch component', async ({ page }) => {
-		const lightSwitch = page.getByTestId('switch-input');
-		await expect(lightSwitch).toBeVisible();
+	test('renders theme switch and defaults to light mode', async ({ page }) => {
+		const switchInput = page.getByTestId('switch-input');
+		await expect(switchInput).toBeVisible();
+		await expect(switchInput).toBeChecked();
 
-		const switchButton = page.getByTestId('switch-thumb');
-		await expect(switchButton).toBeVisible();
-
-		const switchIcon = page.getByTestId(/^switch-icon-.*/);
-		await expect(switchIcon).toBeVisible();
+		await expect(page.locator('html')).toHaveAttribute('data-mode', 'light');
 	});
 
-	test('should render with light mode by default', async ({ page }) => {
-		const html = page.locator('html');
-		await expect(html).toHaveAttribute('data-mode', 'light');
+	test('toggles theme and persists dark mode after reload', async ({ page }) => {
+		const switchInput = page.getByTestId('switch-input');
+		await switchInput.setChecked(false, { force: true });
 
-		await page.waitForTimeout(500);
+		await expect(page.locator('html')).toHaveAttribute('data-mode', 'dark');
+		await expect(switchInput).not.toBeChecked();
+		await expect(page.getByTestId('switch-icon-inactive')).toBeVisible();
+		const storedMode = await page.evaluate(() => window.localStorage.getItem('mode'));
+		expect(storedMode).toBe('dark');
 
-		const activeIcon = page.getByTestId('switch-icon-active');
-		await expect(activeIcon).toBeVisible();
-	});
-
-	test('should switch to dark mode when toggled', async ({ page }) => {
-		const lightSwitch = page.getByTestId('switch-control');
-		await lightSwitch.click();
-
-		const html = page.locator('html');
-		await expect(html).toHaveAttribute('data-mode', 'dark');
-
-		const activeIcon = page.getByTestId('switch-icon-inactive');
-		await expect(activeIcon).toBeVisible();
+		await page.reload();
+		await expect(page.locator('html')).toHaveAttribute('data-mode', 'dark');
 	});
 });

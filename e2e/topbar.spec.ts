@@ -1,30 +1,27 @@
 import { expect, test } from '@playwright/test';
 
-test.describe('Topbar', () => {
+test.describe('TopBar E2E', () => {
 	test.beforeEach(async ({ page }) => {
 		await page.goto('/');
 	});
 
-	test('should display the topbar', async ({ page }) => {
-		const topbar = page.getByTestId('top-bar');
-		await expect(topbar).toBeVisible();
-	});
-
-	test('should display the topbar title with correct text', async ({ page }) => {
+	test('renders title and utility controls', async ({ page }) => {
+		await expect(page.getByTestId('top-bar')).toBeVisible();
 		const title = page.getByTestId('top-bar-title');
 		await expect(title).toBeVisible();
 		await expect(title).toHaveText('Calculator');
+
+		await expect(page.getByTestId('light-switch')).toBeVisible();
+		await expect(page.getByRole('button', { name: 'Toggle Full Screen' })).toBeVisible();
 	});
 
-	test('should display the light switch', async ({ page }) => {
-		const lightSwitch = page.getByTestId('light-switch');
-		await expect(lightSwitch).toBeVisible();
-		const switchInput = lightSwitch.getByTestId('switch-input');
-		await expect(switchInput).toBeVisible();
-	});
-
-	test('should display the source link', async ({ page }) => {
-		const sourceLink = page.getByTestId('source-link');
-		await expect(sourceLink).toBeVisible();
+	test('shows GitHub repository link with correct URL', async ({ page }) => {
+		const githubLink = page.getByRole('link', { name: 'GitHub Repository' });
+		await expect(githubLink).toBeVisible();
+		await expect(githubLink).toHaveAttribute(
+			'href',
+			'https://github.com/TegarAditya/calculator-app-svelte'
+		);
+		await expect(githubLink).toHaveAttribute('target', '_blank');
 	});
 });
