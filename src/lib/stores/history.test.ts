@@ -1,6 +1,6 @@
-import { describe, it, expect, beforeEach, vi, afterAll } from 'vitest';
+import { describe, it, expect, beforeEach, vi } from 'vitest';
 import localforage from 'localforage';
-import HistoryStorage from '$lib/stores/history';
+import HistoryStorage from './history';
 
 vi.mock('localforage', () => ({
 	default: {
