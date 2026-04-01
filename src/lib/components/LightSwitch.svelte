@@ -7,6 +7,7 @@
 
 	$effect(() => {
 		const mode = localStorage.getItem('mode') || 'light';
+		document.documentElement.setAttribute('data-mode', mode);
 		checked = mode === 'light';
 	});
 
@@ -17,13 +18,6 @@
 		checked = event.checked;
 	};
 </script>
-
-<svelte:head>
-	<script>
-		const mode = localStorage.getItem('mode') || 'light';
-		document.documentElement.setAttribute('data-mode', mode);
-	</script>
-</svelte:head>
 
 <Switch {checked} {onCheckedChange} controlActive="bg-surface-200">
 	{#snippet activeChild()}
